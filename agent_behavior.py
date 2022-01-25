@@ -1,42 +1,28 @@
 import numpy as np
 import numba as nb
 
-# import pdb
-# import pandas as pd
-
-# Useful tools
-
-# from quantecon.util import timing
-
 use_numba = True
 
-
-# Note: in the future, this should be divided into macro params, field params,
-# and group params.
 
 class Params:
     """
     Set parameters in the economy. These can broadly be divided into:
-
         * group parameters: ab_0, n_j, n_g, group_dict, w_r
         * field parameters: field_dict, n_j [compatible with ab_0]
         * aggregate parameters: v_all, w, delta [compatible with ab_0]
 
     Group parameters in the economy:
-
-        * ab_0:         Initial abilities for each group (G x J x 2)
+        * ab_0:         Initial abilities for each group [n_g x n_j x 2]
         * n_g:          Number of groups
         * wage_r:       Reservation wage (for drop-out)
 
     Field parameters in the economy:
-
         * field_dict:   Dictionary for J fields
         * n_j:          Number of fields J
 
     Aggregate parameters in the economy:
-
-        * v_all:    Human capital update amount (J x 1)
-        * wage:     Wages upon graduating (J x 1)
+        * v_all:    Human capital update amount (n_j x 1)
+        * wage:     Wages upon graduating (n_j x 1)
         * delta:    Discount rate
     """
 
@@ -51,7 +37,7 @@ class Params:
         self.ab_0 = ab_0
         self.n_g, self.n_j, _ = ab_0.shape
 
-        self.delta = delta
+        self.delta: float = delta
         if wage_r is None:
             self.wage_r = 0
         else:
@@ -125,15 +111,15 @@ class AgentParams:
     """
     def __init__(self,
                  params,
-                 group,
+                 group_idx,
                  h_0,
                  theta):
         self.h_0 = h_0
         self.theta = theta
 
         # params inherited from group parameters
-        self.group = group
-        self.ab_0 = params.ab_0[group]
+        self.group_idx = group_idx
+        self.ab_0 = params.ab_0[group_idx]
 
         # params inherited from macro parameters
         self.v_all = params.v_all
@@ -145,7 +131,7 @@ if __name__ == '__main__':
     true_ability_i = np.random.beta(ab_0_all[0, :, 0], ab_0_all[0, :, 1])
     agent_i_params = AgentParams(
         params_all,
-        group=0,
+        group_idx=0,
         h_0=h_0_all[0],
         theta=true_ability_i
     )
@@ -156,9 +142,9 @@ def get_stop_condition(
         m_courses, s_success,
         alpha_0, beta_0, h_0,
         v_all, delta):
-    '''
+    """
     Stopping condition under monotonicity assumption.
-    '''
+    """
     # if ab_0.shape=(2,), want alpha = first element
     # if ab_0.shape=(n_j, 2), want alpha = n_j equals first axis
     # alpha_0 = np.take(ab_0, 0, axis=-1)
@@ -166,9 +152,9 @@ def get_stop_condition(
 
     stop_condition = (
             delta / (1 - delta) * (
-            (v_all * (alpha_0 + s_success))
-            / (h_0 + v_all * s_success)
-    ) - alpha_0 - beta_0
+                (v_all * (alpha_0 + s_success))
+                / (h_0 + v_all * s_success)
+        ) - alpha_0 - beta_0
     )
 
     return stop_condition
@@ -391,9 +377,9 @@ def _find_agent_history(
         m_star=total_courses
     )
 
-    # Number of switches made
+    # Initialize number of switches made
     n_switch = 0
-    # time index where specialization decision is made
+    # Initial time index where specialization decision is made
     specialize_idx = 0
 
     # Find full course history
@@ -406,9 +392,9 @@ def _find_agent_history(
             # This might have to do with the fact that np.argwhere is not
             # suitable for indexing arrays.
             max_idx_array = np.nonzero(index_t == np.max(index_t))[0]
-            # Randomly choose largest index
+            # Randomly choose the largest index
             choose_j = np.random.choice(max_idx_array)
-        # Otherwise specify which course comes first
+        # Otherwise, specify which course comes first
         else:
             choose_j = choose_first
             choose_first = -1
@@ -426,7 +412,7 @@ def _find_agent_history(
                 v_all=v_all, wage=wage, delta=delta
             ):
                 # then you are specialized.
-                # TODO: check this is the correct index adjustment
+                # TO DO: check this is the correct index adjustment
                 specialize_idx = len(course_tl) - 1
 
         # Graduate if in graduation region
@@ -437,7 +423,7 @@ def _find_agent_history(
             v_all=v_all[choose_j], delta=delta
         ):
             chosen_field = choose_j
-            field_state = ab_t[choose_j, :]
+            chosen_field_state = ab_t[choose_j, :]
             keep_studying = False
         # Study and record outcomes if not
         else:
@@ -463,7 +449,6 @@ def _find_agent_history(
             course_tl = np.append(course_tl, np.int16(choose_j))
             outcome_tl = np.append(outcome_tl, np.int16(outcome_j))
 
-
             # update m_course and s_success
             m_courses[choose_j] += 1
             s_success[choose_j] += outcome_j
@@ -488,7 +473,7 @@ def _find_agent_history(
         course_tl,
         outcome_tl,
         chosen_field,
-        field_state,
+        chosen_field_state,
         n_switch,
         specialize_idx
     )
@@ -499,7 +484,7 @@ def _find_agent_history(
         'course_tl',
         'outcome_tl',
         'chosen_field',
-        'field_state',
+        'chosen_field_state',
         'n_switch',
         'specialize_idx',
     )
@@ -520,25 +505,49 @@ if __name__ == '__main__':
         v_all=agent_i_params.v_all,
         wage=agent_i_params.wage,
         delta=agent_i_params.delta,
-        fail_first=1, choose_first=0,
+        fail_first=1, choose_first=1,
     )
     print(dict(zip(*history)))
 
 
 # %% Agent class
 class Agent:
+    """
+    Class defining an agent at time t with group type g.
+
+    Arguments:
+        * AgentParams
+        Parameters for a particular agent. See class documentation.
+
+    Methods:
+        * find_agent_history(self)
+        Finds the agent's academic history given their state variables
+        at the beginning of their education.
+    """
     def __init__(self, agent_params: AgentParams):
         self.h_0 = agent_params.h_0
         self.theta = agent_params.theta
 
         # params inherited from group parameters
-        self.group = agent_params.group
+        self.group_idx = agent_params.group_idx
         self.ab_0 = agent_params.ab_0
 
         # params inherited from macro parameters
         self.v_all = agent_params.v_all
         self.wage = agent_params.wage
         self.delta = agent_params.delta
+
+        # # Run history argument
+        # _history = self.find_agent_history()
+        #
+        # self.m_courses = _history['m_courses']
+        # self.s_success = _history['s_success']
+        # self.course_tl = _history['course_tl']
+        # self.outcome_tl = _history['outcome_tl'],
+        # self.chosen_field = _history['chosen_field'],
+        # self.chosen_field_state = _history['chosen_field_state'],
+        # self.n_switch = _history['n_switch'],
+        # self.specialize_idx = _history['specialize_idx']
 
     def find_agent_history(self):
         _history = _find_agent_history(
@@ -550,22 +559,27 @@ class Agent:
             delta=self.delta,
         )
 
-        _history = dict(zip(*_history))
-
-        self.m_courses = _history['m_courses']
-        self.s_success = _history['s_success']
-        self.course_tl = _history['course_tl']
-        self.outcome_tl = _history['outcome_tl'],
-        self.chosen_field = _history['chosen_field'],
-        self.field_state = _history['field_state'],
-        self.n_switch = _history['n_switch'],
-        self.specialize_idx = _history['specialize_idx']
-
-    # get agent's history
-    # history = find_agent_history(self)
+        return dict(zip(*_history))
 
 
 if __name__ == '__main__':
     agent_i = Agent(agent_i_params)
-    agent_i.find_agent_history()
+    history = agent_i.find_agent_history()
 
+    def print_i(agent_i, history):
+        # # Create a nice dataframe that summarizes the above output
+        # print('True ability: ' + str(agent.theta))
+        # print('Course History: ')
+        # print(agent.course_tl)
+        # print('Final state: ' + str(agent.chosen_field_state))
+        # print('Number switches: ' + str(agent.n_switch))
+        # print('Specialize index: ' + str(agent.specialize_idx))
+        # Create a nice dataframe that summarizes the above output
+        print('True ability: ' + str(agent_i.theta))
+        print('Course History: ')
+        print(history['course_tl'])
+        print('Final state: ' + str(history['chosen_field_state']))
+        print('Number switches: ' + str(history['n_switch']))
+        print('Specialize index: ' + str(history['specialize_idx']))
+
+    print_i(agent_i, history)
