@@ -8,11 +8,12 @@
 height=6.121302808757603cm,
 tick align=outside,
 tick pos=left,
-title={Baseline Simulation (zoomed in)},
+title={Field selection and wages },
+unbounded coords=jump,
 width=10.729849cm,
 x grid style={white!69.0196078431373!black},
 xlabel={t},
-xmin=-1.05, xmax=30,
+xmin=-1.15, xmax=30,
 xtick style={color=black},
 xtick={0,5,10,15,20},
 xticklabels={
@@ -24,7 +25,7 @@ xticklabels={
 },
 ylabel={Fraction students enrolled in field},
 ymajorgrids,
-ymin=0, ymax=1,
+ymin=-0.05, ymax=1.05,
 ytick style={color=black},
 ytick={0,0.25,0.5,0.75,1},
 yticklabels={
@@ -37,79 +38,83 @@ yticklabels={
 ]
 \addplot [thick, color0, mark=x, mark size=3, mark options={solid}]
 table {%
-0 0.46
-1 0.4
-2 0.42
-3 0.5
-4 0.42
-5 0.48
-6 0.44
-7 0.46
-8 0.46
-9 0.48
-10 0.46
-11 0.48
-12 0.48
-13 0.48
-14 0.48
-15 0.48
-16 0.48
-17 0.48
-18 0.48
-19 0.48
-20 0.48
-21 0.48
+0 0
+1 0
+2 0.2474
+3 0.126
+4 0.1858
+5 0.1568
+6 0.1732
+7 0.1708
+8 0.1677
+9 0.1613
+10 0.1601
+11 0.1611
+12 0.1649
+13 0.1634
+14 0.1624
+15 0.1628
+16 0.1627
+17 0.1623
+18 0.1623
+19 0.1623
+20 0.1623
+21 0.1623
+22 0.1623
+23 0.1623
 };
 \addplot [thick, color1, mark=x, mark size=3, mark options={solid}]
 table {%
-0 0.54
-1 0.6
-2 0.58
-3 0.5
-4 0.58
-5 0.52
-6 0.56
-7 0.54
-8 0.54
-9 0.52
-10 0.54
-11 0.52
-12 0.52
-13 0.52
-14 0.52
-15 0.52
-16 0.52
-17 0.52
-18 0.52
-19 0.52
-20 0.52
-21 0.52
+0 1
+1 1
+2 0.7526
+3 0.874
+4 0.8142
+5 0.8432
+6 0.8268
+7 0.8292
+8 0.8323
+9 0.8387
+10 0.8399
+11 0.8389
+12 0.8351
+13 0.8366
+14 0.8376
+15 0.8372
+16 0.8373
+17 0.8377
+18 0.8377
+19 0.8377
+20 0.8377
+21 0.8377
+22 nan
+23 nan
 };
 \addplot [semithick, color0, opacity=0.5, dashed]
 table {%
-10 0
-10 1
+12 -0.05
+12 1.05
 };
 \addplot [semithick, color1, opacity=0.5, dashed]
 table {%
-10 0
-10 1
+8 -0.05
+8 1.05
 };
-\draw (axis cs:21.5,0.4) node[
+\draw (axis cs:23.5,0.1923) node[
   anchor=base west,
   text=color0,
   rotate=0.0
 ]{Field X};
-\draw (axis cs:21.5,0.55) node[
+\draw (axis cs:21.5,0.8677) node[
   anchor=base west,
   text=color1,
   rotate=0.0
 ]{Field Y};
-\draw (axis cs:18,0.03) node[
+\draw (axis cs:16,0.03) node[
   anchor=base west,
   text=black,
   rotate=0.0
-]{N simulations = 50};
+]{N simulations = 10,000};
 \end{axis}
 
 \end{tikzpicture}

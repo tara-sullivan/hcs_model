@@ -24,9 +24,12 @@ size = ArticleSize()
 dirname = os.path.dirname(__file__)
 tex_img_path = os.path.join(dirname, 'fig_tex_code')
 
+alph_list = ['X', 'Y']
+alph_dict = {key: alph_list[key] for key in range(len(alph_list))}
+
 # %%
 if __name__ == '__main__':
-    sim_num_default = 10
+    sim_num_default = 10000
 
     n_j_default, n_g_default, = 2, 2
     group_idx = 0
@@ -131,7 +134,7 @@ def make_sim_plots(
         plt_title: str = '',
         subject_labels: dict = None,
         sim_num: int=None,
-        plot_vline=False,
+        plot_vline=None,
         figname: str = None,
         ax_idx=None,
         group_ax=None,
@@ -251,8 +254,7 @@ def make_sim_plots(
             figure=fig_standalone, filepath=img_name,
             axis_height=size.h(1.2), axis_width=size.w(1.3),)
         print('saved ' + figname)
-
-    plt.close(fig_standalone)
+        plt.close(fig_standalone)
 
     if group_plot is False:
         return
@@ -287,7 +289,7 @@ def make_sim_plots(
             # Change location of the simulation number
             kwargs['add_text']['add_loc'] = \
                 (3, kwargs['add_text']['add_loc'][1])
-        # Casuallly undoing the previous three lines of code because i'm hungry
+        # Casually undoing the previous three lines of code because i'm hungry
         kwargs['add_text'] = None
         # Move x axis to the inside
         subplot_ax.tick_params(axis='x', direction='in')
