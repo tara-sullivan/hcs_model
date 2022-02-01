@@ -21,6 +21,23 @@ dirname = os.path.dirname(__file__)
 tex_img_path = os.path.join(dirname, 'fig_tex_code')
 
 # %%
+'''
+Beta example plots
+
+    * Beta distribution example - men and women with same mean, different var
+    * Beta distribution example - how beta changes (in slides)
+    * Beta distribution exampel - B(1, 1) vs B(2, 2)
+'''
+
+from model import beta_distribution_example
+
+plt.close('all')
+beta_distribution_example.main()
+plt.close('all')
+
+print('Saved examples of beta distribution.')
+
+# %%
 sim_num_default = 10000
 # Helpful for debugging purposes
 make_group_plot = True
