@@ -273,7 +273,7 @@ def make_sim_plots(
 
         # Create the title for the grouped version
         # if subtitle_id is not None:
-        if subtitle_dict is not None:
+        if subtitle_dict is None:
             kwargs['title'] = ''
         elif subtitle_dict is not None:
             kwargs['title'] = fmt_subtitle(subtitle_dict=subtitle_dict,

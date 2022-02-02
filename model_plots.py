@@ -323,6 +323,7 @@ subplot_titles = subplot_titles + tplf.subplot_title(
     plt_title=plt_title.replace('Field selection and ', '').capitalize(),
 )
 
+# %% Save group plots
 ###################
 # Save group plot #
 ###################

@@ -218,10 +218,6 @@ def find_index(
     """
     m_star: total number of courses in each field; indicative of deterministic
     """
-    # # find_index arguments; uncomment when not in function
-    # h_0 = np.ones(n_j, np.float64)
-    # m_courses = np.zeros(n_j, dtype=np.int8)
-    # s_success = np.zeros(n_j, dtype=np.int8)
     # Initialize index
     index = np.empty_like(h_0, dtype=np.float64)
     # Re-index problem
