@@ -29,13 +29,13 @@ alph_dict = {key: alph_list[key] for key in range(len(alph_list))}
 
 # %%
 if __name__ == '__main__':
-    sim_num_default = 10000
+    sim_num_default = 100
 
     n_j_default, n_g_default, = 2, 2
     group_idx = 0
 
-    ab_0_all_default = np.ones((n_g_default, n_j_default, 2), dtype=np.float64)
-    ab_0_all_default[0, 1, :] = ab_0_all_default[0, 1, :] * 2
+    ab_0_all_default = np.ones((n_g_default, n_j_default, 2), dtype=np.float64) *.5
+    # ab_0_all_default[0, 1, :] = ab_0_all_default[0, 1, :] * 2
     ab_0_default = ab_0_all_default[0]
 
     w_default = np.ones((n_j_default,), dtype=np.float64)
@@ -421,35 +421,35 @@ if __name__ == '__main__':
 
     plt.close('all')
 
-    # make_sim_plots(figname='simulation_50',
-    #                sim_df=agg_sim_df,
-    #                plt_title=plt_title, sim_num=agent_sim.sim_num,
-    #                subject_labels={0: 'Field X', 1: 'Field Y'},
-    #                plot_vline=spec_idx,
-    #                subtitle_id=subtitle_id,
-    #                xticks=[0, 5, 10, 15, 20], yticks=[0, 0.25, 0.5, 0.75, 1],
-    #                label_edit=label_edit,
-    #                save_tikz_code=True, group_plot=False
-    #                )
-    # # plt.show()
-    # plt.close('all')
-
-    fig_all, ax = plt.subplots(3, 2)
-
     make_sim_plots(figname='simulation_50',
                    sim_df=agg_sim_df,
-                   ax_idx=ax_loc, group_ax=ax,
                    plt_title=plt_title, sim_num=agent_sim.sim_num,
                    subject_labels={0: 'Field X', 1: 'Field Y'},
-                   # subtitle_id=subtitle_id,
                    plot_vline=spec_idx,
-                   subtitle_id='b',
                    xticks=[0, 5, 10, 15, 20], yticks=[0, 0.25, 0.5, 0.75, 1],
                    label_edit=label_edit,
-                   save_tikz_code=False, group_plot=True
+                   save_tikz_code=False, group_plot=False
                    )
-
     plt.show()
+
+    # plt.close('all')
+
+    # fig_all, ax = plt.subplots(3, 2)
+    #
+    # make_sim_plots(figname='simulation_50',
+    #                sim_df=agg_sim_df,
+    #                ax_idx=ax_loc, group_ax=ax,
+    #                plt_title=plt_title, sim_num=agent_sim.sim_num,
+    #                subject_labels={0: 'Field X', 1: 'Field Y'},
+    #                # subtitle_id=subtitle_id,
+    #                plot_vline=spec_idx,
+    #                subtitle_id='b',
+    #                xticks=[0, 5, 10, 15, 20], yticks=[0, 0.25, 0.5, 0.75, 1],
+    #                label_edit=label_edit,
+    #                save_tikz_code=False, group_plot=True
+    #                )
+    #
+    # plt.show()
 
     # ability = np.array([.25, .75])
     # subtitle_dict = {'var_tex': r'\theta', 'var': ability}
