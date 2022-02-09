@@ -115,7 +115,6 @@ def find_alpha_beta(
     return alpha_beta_0_all
 
 
-
 # %%
 def simulate_agents_t(
         params_t,
@@ -150,6 +149,13 @@ def simulate_agents_t(
         Initial abilities by group at time t. Default will be 0.5.
         Dimensions follow same parameters as for h_0_t_gj, but using the
         share_theta boolean.
+
+    Returns
+    -------
+    return_dict : dict
+        Dictionary with the following elements
+    num_agents_gt1 : array
+        Number of agents of type g in each field at t + 1
     """
     if share_h_0:
         if h_0_t_gj is not None:
@@ -201,7 +207,11 @@ def simulate_agents_t(
             # create agent
             agent_gt = Agent(agent_params_gt)
             # Simulate agent's decision for the appropriate number of time
-            sim_gt = AgentSimulation(agent_gt, sim_num=n_agent_t_g[idx])
+            sim_gt = AgentSimulation(
+                agent_gt, sim_num=n_agent_t_g[idx], print_sim_time=False)
+
+            # Here is where I could be configuring this to return a dict
+            # instead of just the counts
 
             j_values, j_counts = np.unique(
                 sim_gt.chosen_field, return_counts=True)
@@ -219,12 +229,123 @@ def simulate_agents_t(
                         j_counts[np.argwhere(j_values == j_idx)].squeeze()[()])
             num_agents_gt1_list.append(j_counts_all)
         num_agents_gt1 = np.array(num_agents_gt1_list)
-        return num_agents_gt1
+
+        return {
+            'agent_choice_t_gj': num_agents_gt1
+        }
 
     # if share_h_0 is False | share_theta is False
     else:
         # placeholder in case I generalize this.
         return "Code only configured for shared h_0 and theta_0"
+
+
+# %%
+class DynamicAgentSimulation:
+    """
+    Simulate how beliefs develop over time for groups of agents.
+
+    Parameters
+    ----------
+    params_t0 : Params class
+        Aggregate parameters at the start of the simulation, t=0.
+    belief_update_rule: function
+        How beliefs are updated each period.
+    n_agent_t_g : array, [n_g x 1]
+        number of agents of type g entering at each time period
+    t_periods: int, default = 10
+        Number of time periods to simulate
+    h0_t0_gj: numpy array, optional
+        Initial human capital by group at time t. Default will be
+        h_0 = alpha * v, meaning default dimensions are [n_g x n_j].
+        Currently, configured so all agents of type g share h_0 (i.e.
+        share_h_0 in simulate_agents_t function is True)
+    theta_gj : numpy array, optional
+        Abilities by group. Default will be 0.5, with dimensions
+        [n_g x n_j]. Currently, configured so all agents of type g share
+        theta (i.e. share_h_0 in simulate_agents_t function is True)
+
+    Returns
+    -------
+    n_agent_g : numpy array
+        number of agents in each field in the lsat period
+    """
+    def __init__(self,
+                 params_t0: Params,
+                 belief_update_rule,
+                 n_agent_t_g,
+                 t_periods: int = 10,
+                 h0_t0_gj=None,
+                 theta_gj=None,
+                 ):
+        self.params_t0 = params_t0
+        self.n_agent_t_g = n_agent_t_g
+        self.update_rule = belief_update_rule
+        self.t_periods = t_periods
+
+        # Default to beta bernoulli example; would need to update if
+        # relaxing this assumption
+        if h0_t0_gj is not None:
+            assert (
+                (self.params_t0.n_g, self.params_t0.n_j)
+                == h0_t0_gj.shape
+            ), "Please pass correct dimensions for h0 [n_g x n_j]"
+            self.h0_t0_gj = h0_t0_gj
+        else:
+            self.h0_t0_gj = self.params_t0.ab_0[:, :, 0] * self.params_t0.v_all
+        # Default ability
+        if theta_gj is not None:
+            assert (
+                    (self.params_t0.n_g, self.params_t0.n_j)
+                    == theta_gj.shape
+            ), "Please pass correct dimensions for theta [n_g x n_j]"
+        else:
+            self.theta_gj = theta_gj
+
+        # Run simulation
+        agent_sim = self.run_sim()
+        self.n_agent_g = agent_sim['n_agent_gj']
+
+    def run_sim(self):
+
+        # define parameters in the initial period
+        params_t = self.params_t0
+        h0_t_gj = self.h0_t0_gj
+        # running total of students of each type in each field.
+        # This is the argument for the update rule
+        n_agent_gj = np.zeros((self.params_t0.n_g, self.params_t0.n_j))
+
+        for t_idx in np.arange(1, self.t_periods):
+            # Simulate agents decision-making at time t.
+            sim_t_g = simulate_agents_t(
+                params_t=params_t,
+                n_agent_t_g=self.n_agent_t_g,
+                h_0_t_gj=h0_t_gj,
+                theta_t_gj=self.theta_gj
+            )
+            # Collect agent choices at time t
+            agent_choice_t_gj = sim_t_g['agent_choice_t_gj']
+
+            # Update the total number of students in each type
+            n_agent_gj = n_agent_gj + agent_choice_t_gj
+
+            # Update beliefs based on the total
+            ab_0_t_gj = self.update_rule(n_agent_gj)
+            # Update economy parameters
+            params_t = Params(
+                ab_0_t_gj,
+                field_dict=self.params_t0.field_dict,
+                wage=self.params_t0.wage,
+                v_all=self.params_t0.v_all,
+                delta=self.params_t0.delta
+            )
+            # Note that this will need to be updated if not using
+            # beta bernoulli case
+            h0_t_gj = params_t.ab_0[:, :, 0] * params_t.v_all
+
+        return {
+            'n_agent_gj': n_agent_gj
+        }
 
 
 # %%
@@ -251,41 +372,19 @@ if __name__ == '__main__':
     # Initial belief states based on historical number of agents at t=0
     ab_0_all_t0 = find_alpha_beta(num_agent_t0_gj)
 
-    # Make copies of above items to be updated in loop
-    num_agent_t_gj = num_agent_t0_gj.copy()
-    ab_0_all_t = ab_0_all_t0.copy()
+    params_all_t0 = Params(
+        ab_0_all_t0,
+        field_dict=field_dict_all,
+        wage=wage_all,
+        v_all=v_all,
+        delta=0.96
+    )
 
     # number of each agent type in each new period
     num_agent_t_g = np.array([11, 9, 1])
 
-    for t_idx in np.arange(10):
-
-        # Define economy parameters at t
-        params_all_t = Params(
-            ab_0_all_t,
-            field_dict=field_dict_all,
-            wage=wage_all,
-            v_all=v_all,
-            delta=0.96
-        )
-
-        # num_agent_gt = num_agent_t_gj.sum(axis=1)
-
-        # Initial human capital for beta-bernoulli example
-        h_0_all_t = ab_0_all_t[:, :, 0] * params_all_t.v_all
-        ability_default = 0.5 * np.ones_like(h_0_all_t, dtype=np.float64)
-
-        agent_choice_t_gj = simulate_agents_t(
-            params_t=params_all_t,
-            n_agent_t_g=num_agent_t_g,
-            h_0_t_gj=h_0_all_t,
-            theta_t_gj=ability_default
-        )
-
-        # print(agent_choice_t_gj)
-        # Update the number state variable
-        num_agent_t_gj = num_agent_t_gj + agent_choice_t_gj
-        ab_0_all_t = find_alpha_beta(num_agent_t_gj)
-        print(ab_0_all_t)
-        print(ab_0_all_t0)
-
+    sim = DynamicAgentSimulation(
+        params_t0=params_all_t0,
+        n_agent_t_g=num_agent_t_g,
+        belief_update_rule=find_alpha_beta
+    )
