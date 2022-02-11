@@ -1,5 +1,5 @@
-import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 # simulate multiple agents at time period t
 from scipy.stats.contingency import expected_freq
 
@@ -195,7 +195,7 @@ def simulate_agents_t(
         # Initialize list; this will be the number of agents of group g
         # starting education at t who end up specializing in each field
         num_agents_gt1_list = []
-        for idx in np.arange(n_g_all):
+        for idx in np.arange(params_t.n_g):
             # Create agent's parameters; because h_0 and theta shared among
             # all group members, we only need to do this once for each group.
             agent_params_gt = AgentParams(
@@ -228,6 +228,8 @@ def simulate_agents_t(
                     j_counts_all.append(
                         j_counts[np.argwhere(j_values == j_idx)].squeeze()[()])
             num_agents_gt1_list.append(j_counts_all)
+
+        # Total count in each field
         num_agents_gt1 = np.array(num_agents_gt1_list)
 
         return {
@@ -304,7 +306,7 @@ class DynamicAgentSimulation:
 
         # Run simulation
         agent_sim = self.run_sim()
-        self.n_agent_g = agent_sim['n_agent_gj']
+        self.n_agent_gj = agent_sim['n_agent_gj']
 
     def run_sim(self):
 
@@ -314,8 +316,10 @@ class DynamicAgentSimulation:
         # running total of students of each type in each field.
         # This is the argument for the update rule
         n_agent_gj = np.zeros((self.params_t0.n_g, self.params_t0.n_j))
+        # Initialize list of number of agents at each time t
+        n_agent_gj_list = []
 
-        for t_idx in np.arange(1, self.t_periods):
+        for t_idx in (np.arange(self.t_periods) + 1):
             # Simulate agents decision-making at time t.
             sim_t_g = simulate_agents_t(
                 params_t=params_t,
@@ -326,6 +330,10 @@ class DynamicAgentSimulation:
             # Collect agent choices at time t
             agent_choice_t_gj = sim_t_g['agent_choice_t_gj']
 
+            # Add this period's choice to the list
+            n_agent_gj_list.append(pd.DataFrame(agent_choice_t_gj, index=np.arange(self.params_t0.n_g), columns=np.arange(self.params_t0.n_j)))
+            # n_agent_gj_list.append(agent_choice_t_gj)
+
             # Update the total number of students in each type
             n_agent_gj = n_agent_gj + agent_choice_t_gj
 
@@ -334,7 +342,6 @@ class DynamicAgentSimulation:
             # Update economy parameters
             params_t = Params(
                 ab_0_t_gj,
-                field_dict=self.params_t0.field_dict,
                 wage=self.params_t0.wage,
                 v_all=self.params_t0.v_all,
                 delta=self.params_t0.delta
@@ -342,6 +349,14 @@ class DynamicAgentSimulation:
             # Note that this will need to be updated if not using
             # beta bernoulli case
             h0_t_gj = params_t.ab_0[:, :, 0] * params_t.v_all
+
+        n_agent_gj = pd.concat(n_agent_gj_list, keys=range(self.t_periods), names=['t', 'g'])
+        n_agent_gj.columns.name = 'j'
+        # n_agent_gj_df = pd.DataFrame(n_agent_gj_list)
+        # n_agent_gj_df.index.name = 'g'
+        # n_agent_gj_df.columns.name = 'j'
+        # n_agent_
+
 
         return {
             'n_agent_gj': n_agent_gj
