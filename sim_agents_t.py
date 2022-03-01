@@ -1,9 +1,8 @@
 import numpy as np
 import pandas as pd
+import time
 # simulate multiple agents at time period t
 from scipy.stats.contingency import expected_freq
-
-import itertools
 
 from agent_behavior import Params
 from agent_behavior import AgentParams
@@ -12,7 +11,6 @@ from agent_behavior import Agent
 from sim_agent_history import AgentSimulation
 
 from typing import Union
-import numpy.typing as npt
 
 
 # %%
@@ -301,8 +299,9 @@ class DynamicAgentSimulation:
                     (self.params_t0.n_g, self.params_t0.n_j)
                     == theta_gj.shape
             ), "Please pass correct dimensions for theta [n_g x n_j]"
-        else:
             self.theta_gj = theta_gj
+        else:
+            self.theta_gj = 0.5 * np.ones_like(self.h0_t0_gj)
 
         # Run simulation
         agent_sim = self.run_sim()
@@ -319,6 +318,8 @@ class DynamicAgentSimulation:
         # Initialize list of number of agents at each time t
         n_agent_gj_list = []
 
+        print('Simulating agents...')
+        start = time.time()
         for t_idx in (np.arange(self.t_periods) + 1):
             # Simulate agents decision-making at time t.
             sim_t_g = simulate_agents_t(
@@ -331,8 +332,10 @@ class DynamicAgentSimulation:
             agent_choice_t_gj = sim_t_g['agent_choice_t_gj']
 
             # Add this period's choice to the list
-            n_agent_gj_list.append(pd.DataFrame(agent_choice_t_gj, index=np.arange(self.params_t0.n_g), columns=np.arange(self.params_t0.n_j)))
-            # n_agent_gj_list.append(agent_choice_t_gj)
+            n_agent_gj_list.append(pd.DataFrame(
+                agent_choice_t_gj,
+                index=np.arange(self.params_t0.n_g),
+                columns=np.arange(self.params_t0.n_j)))
 
             # Update the total number of students in each type
             n_agent_gj = n_agent_gj + agent_choice_t_gj
@@ -350,12 +353,12 @@ class DynamicAgentSimulation:
             # beta bernoulli case
             h0_t_gj = params_t.ab_0[:, :, 0] * params_t.v_all
 
-        n_agent_gj = pd.concat(n_agent_gj_list, keys=range(self.t_periods), names=['t', 'g'])
+        n_agent_gj = pd.concat(
+            n_agent_gj_list, keys=range(self.t_periods), names=['t', 'g'])
         n_agent_gj.columns.name = 'j'
-        # n_agent_gj_df = pd.DataFrame(n_agent_gj_list)
-        # n_agent_gj_df.index.name = 'g'
-        # n_agent_gj_df.columns.name = 'j'
-        # n_agent_
+
+        end = time.time()
+        print(f'Time elapsed: {end - start:,.2f} s')
 
 
         return {
