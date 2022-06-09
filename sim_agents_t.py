@@ -6,6 +6,7 @@ from scipy.stats.contingency import expected_freq
 
 from agent_behavior import Params
 from agent_behavior import AgentParams
+
 from agent_behavior import Agent
 
 from sim_agent_history import AgentSimulation
@@ -45,6 +46,20 @@ def find_alpha_beta(
         count of other student types
     """
     n_g, _ = n_agent_t_gj.shape
+
+    if method == 'v3':
+
+        alpha_plus_beta = 6
+
+        observed_num = n_agent_t_gj
+        expected_num = expected_freq(n_agent_t_gj)
+
+        diff = expected_num - observed_num
+
+        def change_param_func(val):
+            if val > .5:
+                pass
+
 
     if method == 'grid':
 

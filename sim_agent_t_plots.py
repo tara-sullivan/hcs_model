@@ -9,6 +9,7 @@ from sim_agents_t import DynamicAgentSimulation
 
 from img_tools import plot_line_labels
 from img_tools import tikzplotlib_functions as tplf
+import tikzplotlib as tpl
 
 # Set image path
 import os
@@ -60,7 +61,7 @@ sim = DynamicAgentSimulation(
     t_periods=20
 )
 
-
+# %%
 fig, ax = plt.subplots()
 
 j_idx = 0
@@ -74,11 +75,25 @@ plot_df(
     df=agent_choose_field_j, ax=ax,
     col_labels=sim.params_t0.group_dict,
     title=plt_title,
-    # x_lim=12,
-    x_title='t',
+    x_lim=25,
+    x_title='Cohort $\\tau$',
     label_edit = {0: .05, 1: -.08}
 )
 
-# ax.set_ylim(-.05, 1.05)
-
-plt.show()
+ax.set_ylim(-.05, 1.05)
+# ax.set_xlabel('')
+#
+# tpl.clean_figure()
+# tpl.save(tex_img_path + '/agent_sim_t.tex')
+# plt.show()
+tplf.save_subplots(
+    tex_img_path + '/agent_sim_t.tex',
+    # figure=fig,
+    # node_code=subplot_titles, caption=group_caption,
+    # height=size.h(1.25), width=size.w(1.05),
+    clean_figure=True,
+    # extra_tikzpicture_parameters={
+    #     'every node/.style={font=\\footnotesize}',
+    #     'align=left'
+    # },
+)
