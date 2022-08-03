@@ -1,0 +1,547 @@
+\begin{tikzpicture}[every node/.style={font=\small}]
+% This file was created with tikzplotlib v0.9.17.
+\definecolor{color0}{rgb}{0.266666666666667,0.466666666666667,0.666666666666667}
+\definecolor{color1}{rgb}{0.933333333333333,0.4,0.466666666666667}
+
+\begin{groupplot}[group style={group size=2 by 3, group name=my plots, horizontal sep=1.2cm, vertical sep=2cm}]
+\nextgroupplot[
+height=5.101085673964669cm,
+tick pos=left,
+width=7.7cm,
+x grid style={white!69.0196078431373!black},
+xlabel style={at={(ticklabel* cs:1.00)}, anchor=north east, font=\normalsize},
+xlabel={\(\displaystyle t\)},
+xmin=-1.05, xmax=30,
+xtick style={color=black},
+xtick={0,5,10,15,20},
+xticklabels={
+  \(\displaystyle 0\),
+  \(\displaystyle 5\),
+  \(\displaystyle 10\),
+  \(\displaystyle 15\),
+  \(\displaystyle 20\)
+},
+ylabel={Fraction enrolled in field},
+ymajorgrids,
+ymin=0, ymax=1,
+ytick style={color=black},
+ytick={0,0.25,0.5,0.75,1},
+yticklabels={
+  \(\displaystyle 0\),
+  \(\displaystyle 0.25\),
+  \(\displaystyle 0.5\),
+  \(\displaystyle 0.75\),
+  \(\displaystyle 1\)
+}
+]
+\addplot [thick, color0, mark=x, mark size=3, mark options={solid}]
+table {%
+0 0.4966
+1 0.5052
+2 0.498
+3 0.5013
+4 0.5011
+5 0.5025
+6 0.4989
+7 0.4991
+8 0.4983
+9 0.4978
+10 0.4981
+11 0.4969
+12 0.4978
+13 0.498
+14 0.4978
+15 0.4983
+16 0.4988
+17 0.4987
+18 0.4986
+19 0.4983
+20 0.4986
+21 0.4987
+};
+\addplot [thick, color1, mark=x, mark size=3, mark options={solid}]
+table {%
+0 0.5034
+1 0.4948
+2 0.502
+3 0.4987
+4 0.4989
+5 0.4975
+6 0.5011
+7 0.5009
+8 0.5017
+9 0.5022
+10 0.5019
+11 0.5031
+12 0.5022
+13 0.502
+14 0.5022
+15 0.5017
+16 0.5012
+17 0.5013
+18 0.5014
+19 0.5017
+20 0.5014
+21 0.5013
+};
+\addplot [semithick, color0, opacity=0.5, dashed]
+table {%
+10 0
+10 1
+};
+\addplot [semithick, color1, opacity=0.5, dashed]
+table {%
+10 0
+10 1
+};
+\draw (axis cs:21.5,0.4187) node[
+  anchor=base west,
+  text=color0,
+  rotate=0.0
+]{Field X};
+\draw (axis cs:21.5,0.5313) node[
+  anchor=base west,
+  text=color1,
+  rotate=0.0
+]{Field Y};
+
+\nextgroupplot[
+height=5.101085673964669cm,
+tick pos=left,
+width=7.7cm,
+x grid style={white!69.0196078431373!black},
+xlabel style={at={(ticklabel* cs:1.00)}, anchor=north east, font=\normalsize},
+xlabel={\(\displaystyle t\)},
+xmin=-1.05, xmax=30,
+xtick style={color=black},
+xtick={0,5,10,15,20},
+xticklabels={
+  \(\displaystyle 0\),
+  \(\displaystyle 5\),
+  \(\displaystyle 10\),
+  \(\displaystyle 15\),
+  \(\displaystyle 20\)
+},
+ymajorgrids,
+ymin=0, ymax=1,
+ytick style={color=black},
+ytick={0,0.25,0.5,0.75,1},
+yticklabels={
+  \(\displaystyle 0\),
+  \(\displaystyle 0.25\),
+  \(\displaystyle 0.5\),
+  \(\displaystyle 0.75\),
+  \(\displaystyle 1\)
+}
+]
+\addplot [thick, color0, mark=x, mark size=3, mark options={solid}]
+table {%
+0 0.46
+1 0.4
+2 0.42
+3 0.5
+4 0.42
+5 0.48
+6 0.44
+7 0.46
+8 0.46
+9 0.48
+10 0.46
+11 0.48
+12 0.48
+13 0.48
+14 0.48
+15 0.48
+16 0.48
+17 0.48
+18 0.48
+19 0.48
+20 0.48
+21 0.48
+};
+\addplot [thick, color1, mark=x, mark size=3, mark options={solid}]
+table {%
+0 0.54
+1 0.6
+2 0.58
+3 0.5
+4 0.58
+5 0.52
+6 0.56
+7 0.54
+8 0.54
+9 0.52
+10 0.54
+11 0.52
+12 0.52
+13 0.52
+14 0.52
+15 0.52
+16 0.52
+17 0.52
+18 0.52
+19 0.52
+20 0.52
+21 0.52
+};
+\addplot [semithick, color0, opacity=0.5, dashed]
+table {%
+10 0
+10 1
+};
+\addplot [semithick, color1, opacity=0.5, dashed]
+table {%
+10 0
+10 1
+};
+\draw (axis cs:21.5,0.4) node[
+  anchor=base west,
+  text=color0,
+  rotate=0.0
+]{Field X};
+\draw (axis cs:21.5,0.55) node[
+  anchor=base west,
+  text=color1,
+  rotate=0.0
+]{Field Y};
+
+\nextgroupplot[
+height=5.101085673964669cm,
+tick pos=left,
+unbounded coords=jump,
+width=7.7cm,
+x grid style={white!69.0196078431373!black},
+xlabel style={at={(ticklabel* cs:1.00)}, anchor=north east, font=\normalsize},
+xlabel={\(\displaystyle t\)},
+xmin=-1.15, xmax=30,
+xtick style={color=black},
+xtick={0,5,10,15,20},
+xticklabels={
+  \(\displaystyle 0\),
+  \(\displaystyle 5\),
+  \(\displaystyle 10\),
+  \(\displaystyle 15\),
+  \(\displaystyle 20\)
+},
+ylabel={Fraction enrolled in field},
+ymajorgrids,
+ymin=-0.05, ymax=1.05,
+ytick style={color=black},
+ytick={0,0.25,0.5,0.75,1},
+yticklabels={
+  \(\displaystyle 0\),
+  \(\displaystyle 0.25\),
+  \(\displaystyle 0.5\),
+  \(\displaystyle 0.75\),
+  \(\displaystyle 1\)
+}
+]
+\addplot [thick, color0, mark=x, mark size=3, mark options={solid}]
+table {%
+0 0
+1 0
+2 0.2474
+3 0.126
+4 0.1858
+5 0.1568
+6 0.1732
+7 0.1708
+8 0.1677
+9 0.1613
+10 0.1601
+11 0.1611
+12 0.1649
+13 0.1634
+14 0.1624
+15 0.1628
+16 0.1627
+17 0.1623
+18 0.1623
+19 0.1623
+20 0.1623
+21 0.1623
+22 0.1623
+23 0.1623
+};
+\addplot [thick, color1, mark=x, mark size=3, mark options={solid}]
+table {%
+0 1
+1 1
+2 0.7526
+3 0.874
+4 0.8142
+5 0.8432
+6 0.8268
+7 0.8292
+8 0.8323
+9 0.8387
+10 0.8399
+11 0.8389
+12 0.8351
+13 0.8366
+14 0.8376
+15 0.8372
+16 0.8373
+17 0.8377
+18 0.8377
+19 0.8377
+20 0.8377
+21 0.8377
+22 nan
+23 nan
+};
+\addplot [semithick, color0, opacity=0.5, dashed]
+table {%
+12 -0.0499999999999998
+12 1.05
+};
+\addplot [semithick, color1, opacity=0.5, dashed]
+table {%
+8 -0.0499999999999998
+8 1.05
+};
+\draw (axis cs:23.5,0.1923) node[
+  anchor=base west,
+  text=color0,
+  rotate=0.0
+]{Field X};
+\draw (axis cs:21.5,0.8677) node[
+  anchor=base west,
+  text=color1,
+  rotate=0.0
+]{Field Y};
+
+\nextgroupplot[
+height=5.101085673964669cm,
+tick pos=left,
+width=7.7cm,
+x grid style={white!69.0196078431373!black},
+xlabel style={at={(ticklabel* cs:1.00)}, anchor=north east, font=\normalsize},
+xlabel={\(\displaystyle t\)},
+xmin=-1.05, xmax=30,
+xtick style={color=black},
+xtick={0,5,10,15,20},
+xticklabels={
+  \(\displaystyle 0\),
+  \(\displaystyle 5\),
+  \(\displaystyle 10\),
+  \(\displaystyle 15\),
+  \(\displaystyle 20\)
+},
+ymajorgrids,
+ymin=0, ymax=1,
+ytick style={color=black},
+ytick={0,0.2,0.4,0.6,0.8,1},
+yticklabels={
+  \(\displaystyle 0\),
+  \(\displaystyle 0.2\),
+  \(\displaystyle 0.4\),
+  \(\displaystyle 0.6\),
+  \(\displaystyle 0.8\),
+  \(\displaystyle 1\)
+}
+]
+\addplot [thick, color0, mark=x, mark size=3, mark options={solid}]
+table {%
+0 0.4977
+1 0.3949
+2 0.3955
+3 0.3525
+4 0.3505
+5 0.3456
+6 0.3177
+7 0.3207
+8 0.3205
+9 0.3184
+10 0.309
+11 0.3136
+12 0.3101
+13 0.3111
+14 0.3069
+15 0.3084
+16 0.3085
+17 0.3082
+18 0.3084
+19 0.3079
+20 0.3075
+21 0.3074
+};
+\addplot [thick, color1, mark=x, mark size=3, mark options={solid}]
+table {%
+0 0.5023
+1 0.6051
+2 0.6045
+3 0.6475
+4 0.6495
+5 0.6544
+6 0.6823
+7 0.6793
+8 0.6795
+9 0.6816
+10 0.691
+11 0.6864
+12 0.6899
+13 0.6889
+14 0.6931
+15 0.6916
+16 0.6915
+17 0.6918
+18 0.6916
+19 0.6921
+20 0.6925
+21 0.6926
+};
+\addplot [semithick, color0, opacity=0.5, dashed]
+table {%
+12 0
+12 1
+};
+\addplot [semithick, color1, opacity=0.5, dashed]
+table {%
+9 0
+9 1
+};
+\draw (axis cs:21.5,0.3374) node[
+  anchor=base west,
+  text=color0,
+  rotate=0.0
+]{Field X};
+\draw (axis cs:21.5,0.7226) node[
+  anchor=base west,
+  text=color1,
+  rotate=0.0
+]{Field Y};
+
+\nextgroupplot[
+height=5.101085673964669cm,
+tick pos=left,
+unbounded coords=jump,
+width=7.7cm,
+x grid style={white!69.0196078431373!black},
+xlabel style={at={(ticklabel* cs:1.00)}, anchor=north east, font=\normalsize},
+xlabel={\(\displaystyle t\)},
+xmin=-1.1, xmax=30,
+xtick style={color=black},
+xtick={0,5,10,15,20},
+xticklabels={
+  \(\displaystyle 0\),
+  \(\displaystyle 5\),
+  \(\displaystyle 10\),
+  \(\displaystyle 15\),
+  \(\displaystyle 20\)
+},
+ylabel={Fraction enrolled in field},
+ymajorgrids,
+ymin=-0.05, ymax=1.05,
+ytick style={color=black},
+ytick={0,0.2,0.4,0.6,0.8,1},
+yticklabels={
+  \(\displaystyle 0\),
+  \(\displaystyle 0.2\),
+  \(\displaystyle 0.4\),
+  \(\displaystyle 0.6\),
+  \(\displaystyle 0.8\),
+  \(\displaystyle 1\)
+}
+]
+\addplot [thick, color0, mark=x, mark size=3, mark options={solid}]
+table {%
+0 0
+1 0.5003
+2 0.2452
+3 0.2452
+4 0.2479
+5 0.2813
+6 0.2497
+7 0.2495
+8 0.2534
+9 0.2539
+10 0.2534
+11 0.2512
+12 0.2476
+13 0.2518
+14 0.2497
+15 0.2503
+16 0.25
+17 0.2502
+18 0.2505
+19 0.2503
+20 0.2502
+21 0.2503
+22 0.2501
+};
+\addplot [thick, color1, mark=x, mark size=3, mark options={solid}]
+table {%
+0 1
+1 0.4997
+2 0.7548
+3 0.7548
+4 0.7521
+5 0.7187
+6 0.7503
+7 0.7505
+8 0.7466
+9 0.7461
+10 0.7466
+11 0.7488
+12 0.7524
+13 0.7482
+14 0.7503
+15 0.7497
+16 0.75
+17 0.7498
+18 0.7495
+19 0.7497
+20 nan
+21 nan
+22 nan
+};
+\addplot [semithick, color0, opacity=0.5, dashed]
+table {%
+11 -0.05
+11 1.05
+};
+\addplot [semithick, color1, opacity=0.5, dashed]
+table {%
+9 -0.05
+9 1.05
+};
+\draw (axis cs:22.5,0.2501) node[
+  anchor=base west,
+  text=color0,
+  rotate=0.0
+]{Field X};
+\draw (axis cs:19.5,0.7497) node[
+  anchor=base west,
+  text=color1,
+  rotate=0.0
+]{Field Y};
+
+\nextgroupplot[
+height=5.101085673964669cm,
+hide x axis,
+hide y axis,
+tick align=outside,
+tick pos=left,
+width=7.7cm,
+x grid style={white!69.0196078431373!black},
+xlabel style={at={(ticklabel* cs:1.00)}, anchor=north east, font=\normalsize},
+xmin=0, xmax=1,
+xtick style={color=black},
+y grid style={white!69.0196078431373!black},
+ymin=0, ymax=1,
+ytick style={color=black}
+]
+\end{groupplot}
+
+
+
+\node [text width=7.428356999999999cm, align=center, anchor=south] at (my plots c1r1.north) {\subcaption{\label{fig:sim_a} Baseline simulation}};
+\node [text width=7.428356999999999cm, align=center, anchor=south] at (my plots c2r1.north) {\subcaption{\label{fig:sim_b} Baseline simulation (zoomed in)}};
+\node [text width=7.428356999999999cm, align=center, anchor=south] at (my plots c1r2.north) {\subcaption{\label{fig:sim_c} Wages }};
+\node [text width=7.428356999999999cm, align=center, anchor=south] at (my plots c2r2.north) {\subcaption{\label{fig:sim_d} Ability to succeed}};
+\node [text width=7.428356999999999cm, align=center, anchor=south] at (my plots c1r3.north) {\subcaption{\label{fig:sim_e} Initial beliefs}};
+
+\end{tikzpicture}
+
+\caption[Simulations of simple version of model]{Simulations of simple version of model. Figure (a) presents the baseline for $N = 10,000$ simulations; figure (b) does the same for the first 50 simulations. The remaining figures have $N = 10,000$ simulations. Figure (c) repeats the simulations for $w_{X} = 1$ and $w_{Y} = 1.5$. Figure (d) repeats the simulations when $\theta_{X} = 0.4$ and $\theta_{Y} = 0.6$. Figure (e) repeats the simulations when $(\alpha_{X0}, \beta_{X0}) = (1, 1)$ and $(\alpha_{Y0}, \beta_{Y0}) = (2, 2)$.}
